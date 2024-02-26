@@ -10,50 +10,34 @@ suite('Functional Tests', function () {
   this.timeout(5000);
   suite('Integration tests with chai-http', function () {
     // #1
-    test('Test GET /hello with no name', function(done) {
-      // Don't forget the callback...
+    test('Test GET /hello with no name', function (done) {
       chai
-        .request(server) // 'server' is the Express App
-        .get('/hello') // http_method(url). NO NAME in the query !
-        .end(function(err, res) {
-          // res is the response object
-    
-          // Test the status and the text response (see the example above).
-          // Please follow the order -status, -text. We rely on that in our tests.
-          // It should respond 'Hello Guest'
+        .request(server)
+        .get('/hello')
+        .end(function (err, res) {
           assert.equal(res.status, 200);
           assert.equal(res.text, 'hello Guest');
-          done(); // Always call the 'done()' callback when finished.
+          done();
         });
     });
     // #2
-    test('Test GET /hello with your name', function(done) {
-      // Don't forget the callback...
+    test('Test GET /hello with your name', function (done) {
       chai
-        .request(server) // 'server' is the Express App
-        .get('/hello?name=John') /** <=== Put your name in the query **/
-        .end(function(err, res) {
-          // res is the response object
-    
-          // Your tests here.
-          // Replace assert.fail(). Make the test pass.
-          // Test the status and the text response. Follow the test order like above.
+        .request(server)
+        .get('/hello?name=John')
+        .end(function (err, res) {
           assert.equal(res.status, 200);
-          assert.equal(res.text, 'hello John' /** <==  Put your name here **/);
-          done(); // Always call the 'done()' callback when finished.
+          assert.equal(res.text, 'hello John');
+          done();
         });
     });
     // #3
-    test('send {surname: "Colombo"}', function(done) {
-      // we setup the request for you...
+    test('send {surname: "Colombo"}', function (done) {
       chai
         .request(server)
         .put('/travellers')
-        /** send {surname: 'Colombo'} here **/
         .send({ surname: 'Colombo' })
-        // .send({...})
-        .end(function(err, res) {
-          /** your tests here **/
+        .end(function (err, res) {
           assert.equal(res.status, 200, 'response status should be 200');
           assert.equal(res.type, 'application/json', 'Response should be json');
           assert.equal(
@@ -66,15 +50,24 @@ suite('Functional Tests', function () {
             'Colombo',
             'res.body.surname should be "Colombo"'
           );
-    
-          done(); // Never forget the 'done()' callback...
+
+          done();
         });
     });
     // #4
-    test('Send {surname: "da Verrazzano"}', function (done) {
-      assert.fail();
+    test('send {surname: "da Verrazzano"}', function (done) {
+      chai
+        .request(server)
+        .put('/travellers')
+        .send({ surname: 'da Verrazzano' })
+        .end(function (err, res) {
+          assert.equal(res.status, 200, 'response status should be 200');
+          assert.equal(res.type, 'application/json', 'Response should be json');
+          assert.equal(res.body.name, 'Giovanni');
+          assert.equal(res.body.surname, 'da Verrazzano');
 
-      done();
+          done();
+        });
     });
   });
 });
@@ -87,7 +80,7 @@ suite('Functional Tests with Zombie.js', function () {
 
 
   suite('Headless browser', function () {
-    test('should have a working "site" property', function() {
+    test('should have a working "site" property', function () {
       assert.isNotNull(browser.site);
     });
   });
